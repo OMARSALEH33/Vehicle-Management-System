@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Vehicle Management System Architecture",
+    "output": "vehicle-architecture.html"
+  },
+  "components": [
+    {
+      "id": "angular",
+      "label": "Angular 17 Frontend & Ngx-Toastr",
+      "type": "frontend",
+      "pos": [50, 100],
+      "size": [220, 100]
+    },
+    {
+      "id": "api",
+      "label": "ASP.NET Core Web API",
+      "type": "backend",
+      "pos": [320, 100],
+      "size": [220, 100]
+    },
+    {
+      "id": "db",
+      "label": "MS SQL Server Database",
+      "type": "database",
+      "pos": [590, 100],
+      "size": [220, 100]
+    }
+  ],
+  "connections": [
+    {
+      "from": "angular",
+      "to": "api",
+      "label": "HTTP REST API",
+      "labelDy": -48
+    },
+    {
+      "from": "api",
+      "to": "db",
+      "label": "Entity Framework Core",
+      "labelDy": -48
+    }
+  ]
+}

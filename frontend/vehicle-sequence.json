@@ -1,0 +1,65 @@
+{
+  "type": "sequence",
+  "title": "Vehicle Creation & Code Duplication Validation Flow",
+  "description": "Sequence diagram illustrating the request lifecycle, business validation for unique codes, and error handling with Toastr.",
+  "participants": [
+    { "id": "user", "name": "User / Browser" },
+    { "id": "angular", "name": "Angular Frontend" },
+    { "id": "api", "name": "ASP.NET Core API" },
+    { "id": "service", "name": "Vehicle Service" },
+    { "id": "db", "name": "SQL Server DB" },
+    { "id": "toastr", "name": "Ngx-Toastr" }
+  ],
+  "messages": [
+    {
+      "from": "user",
+      "to": "angular",
+      "label": "Fills form & clicks 'Create Vehicle'"
+    },
+    {
+      "from": "angular",
+      "to": "api",
+      "label": "POST /api/vehicles (Payload with MakeName & Code)"
+    },
+    {
+      "from": "api",
+      "to": "service",
+      "label": "CreateVehicleAsync(resource)"
+    },
+    {
+      "from": "service",
+      "to": "db",
+      "label": "AnyAsync(m => Code == enteredCode && Make != current)"
+    },
+    {
+      "from": "db",
+      "to": "service",
+      "label": "Returns duplication status (True/False)"
+    },
+    {
+      "from": "service",
+      "to": "api",
+      "label": "Returns ServiceResult.Conflict() if code is taken"
+    },
+    {
+      "from": "api",
+      "to": "angular",
+      "label": "HTTP 400 Bad Request / Conflict with error details"
+    },
+    {
+      "from": "angular",
+      "to": "angular",
+      "label": "handleError(): Extracts specific code error message"
+    },
+    {
+      "from": "angular",
+      "to": "toastr",
+      "label": "toastr.error(codeErrorMessage, 'Validation Error', toastOptions)"
+    },
+    {
+      "from": "toastr",
+      "to": "user",
+      "label": "Displays bottom-right toast with progress bar & animation"
+    }
+  ]
+}

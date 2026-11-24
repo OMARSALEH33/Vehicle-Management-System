@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Creation & Code Duplication Flow</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-green: #4ade80;
+      --accent-red: #f87171;
+      --accent-purple: #c084fc;
+      --border-color: #334155;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--accent-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .participants-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 2rem;
+      position: sticky;
+      top: 10px;
+      z-index: 10;
+    }
+
+    .participant {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    .p-user { border-top: 4px solid var(--accent-blue); }
+    .p-angular { border-top: 4px solid var(--accent-purple); }
+    .p-api { border-top: 4px solid var(--accent-green); }
+    .p-service { border-top: 4px solid #facc15; }
+    .p-db { border-top: 4px solid #fb923c; }
+    .p-toastr { border-top: 4px solid var(--accent-red); }
+
+    .sequence-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: relative;
+    }
+
+    .sequence-step {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .sequence-step:hover {
+      transform: translateX(4px);
+      border-color: var(--accent-blue);
+    }
+
+    .step-number {
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent-blue);
+      font-weight: 700;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+      margin: 0 1.25rem;
+    }
+
+    .step-route {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-req { background: #0369a1; color: #e0f2fe; }
+    .badge-res { background: #991b1b; color: #fee2e2; }
+    .badge-logic { background: #854d0e; color: #fef08a; }
+
+    .step-label {
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: 'Consolas', 'Courier New', monospace;
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Vehicle Creation & Code Duplication Flow</h1>
+      <p class="subtitle">Detailed interactive sequence mapping Angular Toastr handling with ASP.NET Core duplicate validation</p>
+    </header>
+
+    <div class="participants-bar">
+      <div class="participant p-user">User / Browser</div>
+      <div class="participant p-angular">Angular Frontend</div>
+      <div class="participant p-api">ASP.NET Core API</div>
+      <div class="participant p-service">Vehicle Service</div>
+      <div class="participant p-db">SQL Server DB</div>
+      <div class="participant p-toastr">Ngx-Toastr</div>
+    </div>
+
+    <div class="sequence-list">
+
+      <div class="sequence-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-req">Action</span> User &rarr; Angular</div>
+          <div class="step-label">Fills form & clicks 'Create Vehicle'</div>
+        </div>
+      </div>
+
+      <div class="sequence-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-req">HTTP POST</span> Angular &rarr; API</div>
+          <div class="step-label">POST /api/vehicles (Payload: MakeName & Code)</div>
+        </div>
+      </div>
+
+      <div class="sequence-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-logic">Call</span> API &rarr; Service</div>
+          <div class="step-label">CreateVehicleAsync(resource)</div>
+        </div>
+      </div>
+
+      <div class="sequence-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-logic">Query</span> Service &rarr; DB</div>
+          <div class="step-label">AnyAsync(m => Code == enteredCode && MakeId != currentId)</div>
+        </div>
+      </div>
+
+      <div class="sequence-step">
+        <div class="step-number">5</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-logic">Result</span> DB &rarr; Service</div>
+          <div class="step-label">Returns duplication status (IsDuplicate = true)</div>
+        </div>
+      </div>
+
+      <div class="sequence-step">
+        <div class="step-number">6</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-res">Response</span> Service &rarr; API</div>
+          <div class="step-label">Returns ServiceResult.Conflict("This code is already taken by another make")</div>
+        </div>
+      </div>
+
+      <div class="sequence-step">
+        <div class="step-number">7</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-res">HTTP 400</span> API &rarr; Angular</div>
+          <div class="step-label">HTTP 400 Bad Request with validation payload</div>
+        </div>
+      </div>
+
+      <div class="sequence-step">
+        <div class="step-number">8</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-logic">Parse</span> Angular &rarr; Angular</div>
+          <div class="step-label">handleError(): Extracts specific code error message from HttpErrorResponse</div>
+        </div>
+      </div>
+
+      <div class="sequence-step">
+        <div class="step-number">9</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-req">Trigger</span> Angular &rarr; Toastr</div>
+          <div class="step-label">toastr.error(codeErrorMessage, 'Validation Error', toastOptions)</div>
+        </div>
+      </div>
+
+      <div class="sequence-step">
+        <div class="step-number">10</div>
+        <div class="step-content">
+          <div class="step-route"><span class="badge badge-res">UI Render</span> Toastr &rarr; User</div>
+          <div class="step-label">Displays bottom-right toast with progress bar & animation</div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      Generated directly by Gemini AI Assistant • Custom Architecture Sequence Flow
+    </footer>
+  </div>
+
+</body>
+</html>

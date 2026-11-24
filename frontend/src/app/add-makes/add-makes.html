@@ -1,0 +1,59 @@
+<div class="overlay" (click)="closed.emit()"></div>
+<aside class="panel">
+
+  <header class="panel-header">
+    <h2>{{ isEdit() ? 'Edit Make' : 'Create New Make' }}</h2>
+    <button type="button" class="close" (click)="closed.emit()">✕</button>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()"  class="panel-form">  
+      <div class="form-group">
+        <label for="make">Make Name</label>
+        <input 
+          id="make" 
+          type="text" 
+          formControlName="name" 
+          list="makesList"
+          placeholder="Select or type make..."
+          [class.invalid]="submitted() && !form.getRawValue().name" />
+        
+        <datalist id="makesList">
+          @for (make of makes(); track make.id) {
+            <option [value]="make.name"></option>
+          }
+        </datalist>
+
+        @if (submitted() && !form.getRawValue().name) {
+          <small class="error-text">Make is required</small>
+        }
+        @if (serverErrors()['MakeName']) {
+          <small class="error-text">{{ serverErrors()['MakeName'] }}</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="code">Code</label>
+        <input id="code" type="text" formControlName="code" placeholder="Enter vehicle code..." 
+        [class.invalid]="submitted() && !form.getRawValue().code" />
+       
+       <datalist id="codesList">
+          @for (code of makes(); track code.id) {
+            <option [value]="code.name"></option>
+          }
+        </datalist>
+
+        @if (showError(form.controls.code)) {
+          <small class="error-text">Code is required</small>
+        }
+        @if (serverErrors()['Code']) {
+          <small class="error-text">{{ serverErrors()['Code'] }}</small>
+        }
+      </div>
+
+    <div class="panel-footer">
+      <button type="button" class="btn-cancel" (click)="closed.emit()">Cancel</button>
+      <button type="submit" class="btn-submit" [class.saving]="saving()">
+        {{ saving() ? 'Saving...' : (isEdit() ? 'Save Changes' : 'Create Make') }}
+      </button>
+    </div>
+    

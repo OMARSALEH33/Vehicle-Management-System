@@ -1,0 +1,140 @@
+<div class="overlay" (click)="closed.emit()"></div>
+
+<aside class="panel">
+
+  <header class="panel-header">
+    <h2>{{ isEdit() ? 'Edit Vehicle' : 'Create New Vehicle' }}</h2>
+    <button type="button" class="close" (click)="closed.emit()">✕</button>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="panel-form">
+    <div class="panel-body">
+        
+      <div class="form-group">
+        <label for="make">Make</label>
+        <select 
+          id="make" 
+          formControlName="makeName" 
+          [class.invalid]="submitted() && !form.getRawValue().makeName">
+          <option value="" disabled selected>Select make...</option>
+          @for (make of makes(); track make.id) {
+            <option [value]="make.name">{{ make.name }}</option>
+          }
+        </select>
+
+        @if (submitted() && !form.getRawValue().makeName) {
+          <small class="error-text">Make is required</small>
+        }
+        
+        @if (serverErrors()['MakeName']) {
+          <small class="error-text">{{ serverErrors()['MakeName'] }}</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="model">Model</label>
+        <select 
+          id="model" 
+          formControlName="modelName" 
+          [class.invalid]="submitted() && !form.getRawValue().modelName">
+          <option value="" disabled selected>Select model...</option>
+          @for (model of models(); track model.id) {
+            <option [value]="model.name">{{ model.name }}</option>
+          }
+        </select>
+
+        @if (submitted() && !form.getRawValue().modelName) {
+          <small class="error-text">Model is required</small>
+        }
+        @if (serverErrors()['ModelName']) {
+          <small class="error-text">{{ serverErrors()['ModelName'] }}</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="code">Code</label>
+        <input id="code" type="text" formControlName="code" readonly placeholder="Enter vehicle code..." 
+        [class.invalid]="submitted() && !form.getRawValue().code" />
+       
+       <datalist id="codesList">
+          @for (code of makes(); track code.id) {
+            <option [value]="code.name"></option>
+          }
+        </datalist>
+
+        @if (submitted() && !form.getRawValue().code) {
+          <small class="error-text">Code is required</small>
+        }
+        @if (serverErrors()['Code']) {
+          <small class="error-text">{{ serverErrors()['Code'] }}</small>
+        }
+      </div>
+
+      <div class="form-group">
+        <label>Features</label>
+        <div class="features">
+          @for (feature of features(); track feature.id) {
+            <label class="checkbox">
+              <input
+                type="checkbox"
+                [checked]="selectedFeatures().includes(feature.id)"
+                (change)="toggleFeature(feature.id, $any($event.target).checked)" />
+              <span>{{ feature.name }}</span>
+            </label>
+          }
+        </div>
+        @if (serverErrors()['Features']) {
+          <small class="error-text">{{ serverErrors()['Features'] }}</small>
+        }
+      </div>
+
+      <div formGroupName="contact">
+        
+        <div class="form-group">
+          <label for="contactName">Contact Name</label>
+          <input id="contactName" type="text" formControlName="name"
+                 [class.invalid]="showError(form.controls.contact.controls.name)" />
+          @if (showError(form.controls.contact.controls.name)) {
+            <small class="error-text">Name is required</small>
+          }
+          @if (serverErrors()['Contact.Name']) {
+            <small class="error-text">{{ serverErrors()['Contact.Name'] }}</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="contactPhone">Phone</label>
+          <input id="contactPhone" type="text" formControlName="phone"
+                 [class.invalid]="showError(form.controls.contact.controls.phone)" />
+          @if (showError(form.controls.contact.controls.phone)) {
+            <small class="error-text">Phone is required</small>
+          }
+          @if (serverErrors()['Contact.Phone']) {
+            <small class="error-text">{{ serverErrors()['Contact.Phone'] }}</small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="contactEmail">Email</label>
+          <input id="contactEmail" type="text" formControlName="email"
+                 [class.invalid]="showError(form.controls.contact.controls.email)" />
+          @if (showError(form.controls.contact.controls.email)) {
+            <small class="error-text">Enter a valid email</small>
+          }
+          @if (serverErrors()['Contact.Email']) {
+            <small class="error-text">{{ serverErrors()['Contact.Email'] }}</small>
+          }
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-footer">
+      <button type="button" class="btn-cancel" (click)="closed.emit()">Cancel</button>
+      <button type="submit" class="btn-submit" [class.saving]="saving()">
+        {{ saving() ? 'Saving...' : (isEdit() ? 'Save Changes' : 'Create Vehicle') }}
+      </button>
+    </div>
+  </form>
+</aside>

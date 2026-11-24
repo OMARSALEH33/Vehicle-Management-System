@@ -1,0 +1,6 @@
+@Challenge_1_Build_APIS_HostAddress = http://localhost:5165
+
+GET {{Challenge_1_Build_APIS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

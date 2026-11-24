@@ -1,0 +1,31 @@
+<aside class="sidebar">
+    <div class="logo">
+        <span class="logo-box">V</span>
+        <span>Vega</span>
+    </div>
+
+    <p class="section">WORKSPACE</p>
+    <nav>
+        <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/vehicles" routerLinkActive="active">Vehicles</a>
+        @if(authService.isAdmin()){
+            <a routerLink="/setting" routerLinkActive="active">Setting</a>
+        }
+    </nav>
+
+    <a class="logout" routerLink="/login">Logout</a>
+</aside>
+
+<div class="main">
+    <header class="topbar">
+        <div class="breadcrumb">workspace / <strong>{{title()}}</strong></div>
+        <div class="user">
+            <span class="avatar">VA</span>
+            <span>Vega Admin</span>
+        </div>
+    </header>
+
+    <main class="content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

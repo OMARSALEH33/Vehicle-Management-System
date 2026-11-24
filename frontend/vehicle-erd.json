@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "diagram_type": "erd",
+  "meta": {
+    "title": "Vehicle Management System - Full ERD",
+    "output": "vehicle-erd.html"
+  },
+  "entities": [
+    {
+      "id": "makes",
+      "label": "Makes",
+      "pos": [50, 50],
+      "attributes": [
+        { "name": "Id", "type": "INT", "key": ["pk"] },
+        { "name": "Name", "type": "NVARCHAR(100)" },
+        { "name": "Code", "type": "VARCHAR(50)", "key": ["uk"] }
+      ]
+    },
+    {
+      "id": "models",
+      "label": "Models",
+      "pos": [380, 50],
+      "attributes": [
+        { "name": "Id", "type": "INT", "key": ["pk"] },
+        { "name": "Name", "type": "NVARCHAR(100)" },
+        { "name": "MakeId", "type": "INT", "key": ["fk"], "references": "makes.Id" }
+      ]
+    },
+    {
+      "id": "vehicles",
+      "label": "Vehicles",
+      "pos": [710, 50],
+      "attributes": [
+        { "name": "Id", "type": "INT", "key": ["pk"] },
+        { "name": "ModelId", "type": "INT", "key": ["fk"], "references": "models.Id" },
+        { "name": "IsRegistered", "type": "BIT" },
+        { "name": "ContactName", "type": "NVARCHAR(255)" },
+        { "name": "ContactPhone", "type": "VARCHAR(50)" },
+        { "name": "ContactEmail", "type": "VARCHAR(255)" },
+        { "name": "LastUpdate", "type": "DATETIME2" }
+      ]
+    },
+    {
+      "id": "features",
+      "label": "Features",
+      "pos": [380, 420],
+      "attributes": [
+        { "name": "Id", "type": "INT", "key": ["pk"] },
+        { "name": "Name", "type": "NVARCHAR(100)" }
+      ]
+    },
+    {
+      "id": "vehicle_features",
+      "label": "VehicleFeatures",
+      "pos": [710, 460],
+      "attributes": [
+        { "name": "VehicleId", "type": "INT", "key": ["pk", "fk"], "references": "vehicles.Id" },
+        { "name": "FeatureId", "type": "INT", "key": ["pk", "fk"], "references": "features.Id" }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "from": "makes",
+      "to": "models",
+      "label": "Has Models",
+      "labelDy": -46,
+      "fromCardinality": "one",
+      "toCardinality": "many"
+    },
+    {
+      "from": "models",
+      "to": "vehicles",
+      "label": "Has Vehicles",
+      "labelDy": -46,
+      "fromCardinality": "one",
+      "toCardinality": "many"
+    },
+    {
+      "from": "vehicles",
+      "to": "vehicle_features",
+      "label": "Vehicle Features",
+      "labelDy": 24,
+      "fromCardinality": "one",
+      "toCardinality": "many"
+    },
+    {
+      "from": "features",
+      "to": "vehicle_features",
+      "label": "Feature Mapping",
+      "labelDy": -36,
+      "fromCardinality": "one",
+      "toCardinality": "many"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+<h1>Welcome back</h1>
+<p class="subtitle">An overview of your makes, models, and vehicles.</p>
+
+<div class="stats">
+  <div class="card stat">
+    <span class="label">Registered Makes</span>
+    <p><strong>{{ totalMakesCount() }}</strong> in the catalog</p>
+  </div>
+  
+  <div class="card stat">
+    <span class="label">Linked Models</span>
+    <p><strong>{{ totalModels() }}</strong> across {{ totalMakesCount() }} makes</p>
+  </div>
+  
+  <div class="card stat">
+    <span class="label">Vehicles</span>
+    <p><strong>{{ vehiclesCount() }}</strong> in your workspace</p>
+  </div>
+</div>
+
+<div class="grid">
+
+  <section class="card">
+    <div class="card-header">
+      <h2>Makes</h2>
+      <span class="muted">{{ totalMakesCount() }} makes</span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Make Name</th>
+          <th>Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (make of makes(); track make.id) {
+          <tr>
+            <td class="bold">{{ make.name }}</td>
+            <td class="muted">{{ make.code }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="2" class="empty">No makes found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="card-footer">
+      <span>Showing {{ makesStartItem() }} to {{ makesEndItem() }} of {{ totalMakesCount() }} makes</span>
+
+      @if (makesTotalPages() > 1) {
+        <div class="pagination">
+          <button
+            type="button"
+            [disabled]="makesPage() <= 1"
+            (click)="goToMakesPage(makesPage() - 1)">
+            Previous
+          </button>
+
+          <span>Page {{ makesPage() }} of {{ makesTotalPages() }}</span>
+
+          <button
+            type="button"
+            [disabled]="makesPage() >= makesTotalPages()"
+            (click)="goToMakesPage(makesPage() + 1)">
+            Next
+          </button>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="card chart-card">
+    <h2>Models by Make</h2>
+    <p class="muted">{{ totalModels() }} linked models across {{ totalMakesCount() }} registered makes</p>
+
+    <div class="chart">
+      @if (totalModels() > 0) {
+        <svg viewBox="0 0 200 200" width="200" height="200">
+          @for (slice of slices(); track slice.id) {
+            @if (slice.path) {
+              <path
+                class="slice"
+                [attr.d]="slice.path"
+                [attr.fill]="slice.color"
+                (mouseenter)="hovered.set(slice)"
+                (mouseleave)="hovered.set(null)" />
+            }
+          }
+        </svg>
+      } @else {
+        <p class="empty">No models yet</p>
+      }
+
+      @if (hovered(); as activeSlice) {
+        <div class="tooltip">
+          <div class="tooltip-title">
+            <span class="dot" [style.background]="activeSlice.color"></span>
+            {{ activeSlice.name }}
+          </div>
+          <div class="tooltip-row"><span>Makes:</span><strong>1</strong></div>
+          <div class="tooltip-row"><span>Models:</span><strong>{{ activeSlice.models }}</strong></div>
+        </div>
+      }
+    </div>
+
+    <ul class="legend">
+      @for (slice of slices(); track slice.id) {
+        <li>
+          <span class="dot" [style.background]="slice.color"></span>
+          <span>{{ slice.name }}</span>
+          <span class="muted right">{{ slice.models }} models</span>
+        </li>
+      }
+    </ul>
+
+    <p class="note">Segment size represents linked model count.</p>
+  </section>
+
+</div>    
+
+<router-outlet/>

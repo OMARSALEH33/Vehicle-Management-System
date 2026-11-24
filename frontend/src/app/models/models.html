@@ -1,0 +1,103 @@
+<div class="back-link">
+  <a routerLink="/settings">
+    &lt; Back to Settings
+  </a>
+</div>
+
+<form class="container-final">
+
+  <div class="page-header">
+    <div class="header-titles">
+      <h2>Models</h2>
+      <p class="muted">Manage models and the makes they belong to.</p>
+    </div>
+    <button class="btn-top-add" type="button" (click)="openCreate()">+ Add Model</button>
+  </div>
+
+  <section class="card">
+    <div class="card-header">
+      <div>
+        <h3>All Models</h3>
+      </div>
+    <span class="muted">{{ totalCount() }} {{ totalCount() === 1 ? 'model' : 'models' }}</span>    </div>
+
+    <div class="filter-row">
+      <div class="search-container">
+        <input
+          #kw
+          id="keyword"
+          type="text"
+          placeholder="Search model by name or code..."
+          [ngModel]="keyword()"
+          (ngModelChange)="search($event)"
+          [ngModelOptions]="{standalone:true}" />
+      </div>
+      <div class="sort-container">
+        <select class="sort-select">
+          <option>Sort: Name</option>
+        </select>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name Model</th>
+          <th>Associated Make</th>
+          <th class="actions-column">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (model of filtered(); track model.id) {
+          <tr>
+            <td class="bold">{{ model.name }}</td>
+            <td class="blod">{{ getMakeName(model.makeId) }}</td>
+            <td>
+              <div class="actions">
+                <button class="btn-edit" type="button" (click)="openEdit(model)">Edit</button>
+                <button class="btn-delete" type="button" (click)="remove(model)">Delete</button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="3" class="empty">{{ loading() ? 'Loading...' : 'No model found' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="card-footer">
+      <span>Showing {{ startItem() }} to {{ endItem() }} of {{ totalCount() }} models</span>
+
+      @if (totalPages() > 1) {
+        <div class="pagination">
+          <button
+            type="button"
+            [disabled]="page() <= 1"
+            (click)="goToPage(page() - 1)">
+            Previous
+          </button>
+
+          <span>Page {{ page() }} of {{ totalPages() }}</span>
+
+          <button
+            type="button"
+            [disabled]="page() >= totalPages()"
+            (click)="goToPage(page() + 1)">
+            Next
+          </button>
+        </div>
+      }
+    </div>
+  </section>
+</form>
+
+@if (drawerOpen()) {
+  <app-add-model
+    [model]="editing()"
+    [makes]="makes()"
+    (saved)="onSaved()"
+    (closed)="closeDrawer()"
+  />
+}

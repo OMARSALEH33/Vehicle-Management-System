@@ -1,0 +1,72 @@
+{
+  "schema_version": 3,
+  "diagram_type": "lifecycle",
+  "meta": {
+    "title": "Vehicle & Make Record Lifecycle",
+    "output": "vehicle-lifecycle.html"
+  },
+  "states": [
+    {
+      "id": "draft",
+      "label": "Draft (إدخال البيانات)",
+      "type": "start"
+    },
+    {
+      "id": "validation",
+      "label": "Validation (التحقق من التكرار)",
+      "type": "decision"
+    },
+    {
+      "id": "active",
+      "label": "Active (نشط ومحفوظ)",
+      "type": "success"
+    },
+    {
+      "id": "modified",
+      "label": "Modified (تعديل وتحديث)",
+      "type": "active"
+    },
+    {
+      "id": "archived",
+      "label": "Archived / Deleted (أرشفة)",
+      "type": "neutral"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "draft",
+      "to": "validation",
+      "label": "Submit Form"
+    },
+    {
+      "from": "validation",
+      "to": "active",
+      "label": "Unique Check Passed"
+    },
+    {
+      "from": "validation",
+      "to": "draft",
+      "label": "Validation Error (400)"
+    },
+    {
+      "from": "active",
+      "to": "modified",
+      "label": "Update Record"
+    },
+    {
+      "from": "modified",
+      "to": "active",
+      "label": "Save Changes"
+    },
+    {
+      "from": "active",
+      "to": "archived",
+      "label": "Delete / Archive"
+    }
+  ],
+  "mainPath": [
+    "draft",
+    "validation",
+    "active"
+  ]
+}

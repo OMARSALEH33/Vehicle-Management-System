@@ -1,0 +1,56 @@
+<div class="overlay" (click)="closed.emit()"></div>
+<aside class="panel">
+
+  <header class="panel-header">
+    <h2>{{ isEdit() ? 'Edit Model' : 'Create New Model' }}</h2>
+    <button type="button" class="close" (click)="closed.emit()">✕</button>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="panel-form">
+    
+    <div class="form-group">
+      <label for="makeId">Select Make</label>
+      <select 
+        id="makeId" 
+        formControlName="makeId"
+        [class.invalid]="submitted() && form.controls.makeId.invalid">
+        <option [value]="0" disabled> Select Make </option>
+        @for (make of makes(); track make.id) {
+          <option [value]="make.id">{{ make.name }}</option>
+        }
+      </select>
+
+      @if (showError(form.controls.makeId)) {
+        <small class="error-text">Please select a make</small>
+      }
+      @if (serverErrors()['MakeId'] || serverErrors()['makeId']) {
+        <small class="error-text">{{ serverErrors()['MakeId'] || serverErrors()['makeId'] }}</small>
+      }
+    </div>
+
+    <div class="form-group">
+      <label for="name">Model Name</label>
+      <input 
+        id="name" 
+        type="text" 
+        formControlName="name" 
+        placeholder="Enter model name..." 
+        [class.invalid]="showError(form.controls.name)" />
+
+      @if (showError(form.controls.name)) {
+        <small class="error-text">Model name is required</small>
+      }
+      @if (serverErrors()['Name'] || serverErrors()['name']) {
+        <small class="error-text">{{ serverErrors()['Name'] || serverErrors()['name'] }}</small>
+      }
+    </div>
+
+    <div class="panel-footer">
+      <button type="button" class="btn-cancel" (click)="closed.emit()">Cancel</button>
+      <button type="submit" class="btn-submit" [class.saving]="saving()">
+        {{ saving() ? 'Saving...' : (isEdit() ? 'Save Changes' : 'Create Model') }}
+      </button>
+    </div>
+
+  </form>
+</aside>
